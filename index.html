@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon | Custom Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+        .animate-pulse-slow {
+            animation: subtlePulse 4s ease-in-out infinite;
+        }
+        .bg-grain {
+            background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 flex items-center justify-center min-h-screen overflow-hidden">
+
+    <div class="absolute inset-0 bg-grain opacity-20 pointer-events-none"></div>
+
+    <div class="relative z-10 text-center px-6">
+        
+        <div class="mb-6 inline-block">
+            <span class="px-3 py-1 border border-zinc-700 rounded-full text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold animate-pulse">
+                In Development
+            </span>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4 animate-pulse-slow">
+            Coming <span class="text-zinc-500">Soon</span>
+        </h1>
+
+        <p class="max-w-md mx-auto text-zinc-400 text-sm md:text-base font-light leading-relaxed tracking-wide">
+            Precision-engraved hardware and custom handcrafted grips. <br>
+            Our digital storefront is currently under construction.
+        </p>
+
+        <div class="mt-12 flex justify-center space-x-2">
+            <div class="w-12 h-[1px] bg-zinc-800"></div>
+            <div class="w-2 h-[1px] bg-zinc-500"></div>
+            <div class="w-12 h-[1px] bg-zinc-800"></div>
+        </div>
+
+        <div class="mt-12 text-[10px] uppercase tracking-widest text-zinc-600 font-bold">
+            Cameron County, TX
+        </div>
+    </div>
+
+</body>
+</html>
