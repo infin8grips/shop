@@ -146,11 +146,11 @@
 
             try {
                 // To this (pointing to your actual Vercel deployment):
-const response = await fetch('https://shop-chi-ashen.vercel.app/api/checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items: cart })
-});
+        const response = await fetch('https://shop-chi-ashen.vercel.app/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cart })
+        });
 
                 if (!response.ok) throw new Error('API Error');
 
