@@ -12,11 +12,11 @@
         #product-modal { backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="bg-stone-50 text-stone-900 font-sans selection:bg-orange-200">
+<body class="bg-gray-50 text-gray-900 font-sans selection:bg-black selection:text-white">
 
-    <nav class="p-6 flex justify-between items-center bg-white/90 sticky top-0 z-40 border-b border-stone-200 glass">
-        <h1 class="text-xl font-black tracking-tighter italic uppercase">INFIN8GRIPS!</h1>
-        <button onclick="toggleCart(true)" class="text-sm font-bold hover:text-orange-600 transition uppercase tracking-widest">
+    <nav class="p-6 flex justify-between items-center bg-white/90 sticky top-0 z-40 border-b border-gray-100 glass">
+        <h1 class="text-xl font-bold tracking-tighter italic">INFIN8GRIPS!</h1>
+        <button onclick="toggleCart(true)" class="text-sm font-medium hover:opacity-70 transition flex items-center gap-2">
             Bag (<span id="cart-count">0</span>)
         </button>
     </nav>
@@ -24,31 +24,31 @@
     <main id="product-grid" class="max-w-6xl mx-auto p-6 md:p-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
         </main>
 
-    <div id="product-modal" class="fixed inset-0 bg-black/60 hidden z-50 items-center justify-center p-4" onclick="closeModal()">
-        <div class="bg-white max-w-4xl w-full rounded-sm overflow-hidden shadow-2xl flex flex-col md:flex-row" onclick="event.stopPropagation()">
-            <div id="modal-img-container" class="md:w-1/2 bg-stone-200 h-80 md:h-auto"></div>
-            <div class="p-10 md:w-1/2 flex flex-col justify-center bg-white">
-                <h2 id="modal-title" class="text-3xl font-bold mb-2 tracking-tight uppercase"></h2>
-                <p id="modal-price" class="text-xl text-stone-500 mb-6 font-mono"></p>
-                <p id="modal-desc" class="text-stone-600 leading-relaxed mb-8 text-sm italic"></p>
-                <button id="add-to-cart-btn" class="bg-black text-white py-4 rounded-sm hover:bg-orange-600 transition shadow-lg font-bold uppercase tracking-widest">Add to Bag</button>
+    <div id="product-modal" class="fixed inset-0 bg-black/40 hidden z-50 flex items-center justify-center p-4" onclick="closeModal()">
+        <div class="bg-white max-w-4xl w-full rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row" onclick="event.stopPropagation()">
+            <div id="modal-img-container" class="md:w-1/2 bg-gray-100 h-64 md:h-auto"></div>
+            <div class="p-10 md:w-1/2 flex flex-col justify-center">
+                <h2 id="modal-title" class="text-3xl font-bold mb-2 tracking-tight"></h2>
+                <p id="modal-price" class="text-xl text-gray-500 mb-6"></p>
+                <p id="modal-desc" class="text-gray-600 leading-relaxed mb-8"></p>
+                <button id="add-to-cart-btn" class="bg-black text-white py-4 rounded-full hover:bg-zinc-800 transition shadow-lg font-bold">Add to Bag</button>
             </div>
         </div>
     </div>
 
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl z-[60] translate-x-full cart-sidebar flex flex-col">
-        <div class="p-6 border-b border-stone-100 flex justify-between items-center">
-            <h3 class="text-lg font-black uppercase tracking-widest">Your Bag</h3>
-            <button onclick="toggleCart(false)" class="text-3xl leading-none hover:text-orange-600">&times;</button>
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-lg font-bold">Your Bag</h3>
+            <button onclick="toggleCart(false)" class="text-3xl leading-none">&times;</button>
         </div>
         <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-6">
             </div>
-        <div class="p-6 border-t border-stone-100 bg-stone-50">
-            <div class="flex justify-between mb-4 font-bold text-lg uppercase tracking-tighter">
+        <div class="p-6 border-t bg-gray-50">
+            <div class="flex justify-between mb-4 font-bold text-lg">
                 <span>Total</span>
                 <span id="cart-total">$0.00</span>
             </div>
-            <button id="checkout-btn" onclick="checkout()" class="w-full bg-black text-white py-5 rounded-sm font-bold hover:bg-orange-600 transition disabled:opacity-50 uppercase tracking-widest">
+            <button id="checkout-btn" onclick="checkout()" class="w-full bg-black text-white py-4 rounded-full font-bold hover:bg-zinc-800 transition disabled:opacity-50">
                 Checkout via Square
             </button>
         </div>
@@ -56,9 +56,9 @@
 
     <script>
         const PRODUCTS = [
-            { id: 1, name: "Snake Texture Grip v1", price: 85, img: "images/snk0.png", desc: "Hand-finished 1911 grip with deep-etched snake scale texture for superior grip and aesthetics." },
-            { id: 2, name: "Snake Texture Grip v2", price: 120, img: "images/snk1.png", desc: "Premium obsidian-finish 1911 grip. Precision crafted for the enthusiast." },
-            { id: 3, name: "Custom Serpent Grip", price: 42, img: "images/snk2.png", desc: "Limited edition custom serpent pattern. Lightweight and durable." }
+            { id: 1, name: "1911 Snake Texture Grip", price: 85, img: "images/snk0.png", desc: "Handmade 1911 grip with deep snake skin texture for maximum control." },
+            { id: 2, name: "1911 Classic Grip", price: 120, img: "images/snk1.png", desc: "Premium handmade 1911 grip with refined snake skin finish." },
+            { id: 3, name: "1911 Custom Grip", price: 42, img: "images/snk2.png", desc: "Custom crafted 1911 grip featuring unique scale patterns." }
         ];
 
         let cart = [];
@@ -67,13 +67,13 @@
             const grid = document.getElementById('product-grid');
             grid.innerHTML = PRODUCTS.map(p => `
                 <div class="product-card cursor-pointer group" onclick="openModal(${p.id})">
-                    <div class="aspect-[4/5] overflow-hidden bg-stone-200 mb-4 shadow-sm border border-stone-200">
-                        <img src="${p.img}" class="w-full h-full object-cover transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x500?text=Infin8+Grip'">
+                    <div class="aspect-[4/5] overflow-hidden rounded-xl bg-gray-200 mb-4 shadow-sm">
+                        <img src="${p.img}" class="w-full h-full object-cover transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x500?text=Grip+Image'">
                     </div>
                     <div class="flex justify-between items-start px-1">
                         <div>
-                            <h3 class="font-bold text-md uppercase tracking-tight">${p.name}</h3>
-                            <p class="text-stone-500 font-mono text-sm">$${p.price}</p>
+                            <h3 class="font-bold text-lg tracking-tight">${p.name}</h3>
+                            <p class="text-gray-500 font-medium">$${p.price}</p>
                         </div>
                     </div>
                 </div>
@@ -85,13 +85,15 @@
             document.getElementById('modal-title').innerText = p.name;
             document.getElementById('modal-price').innerText = `$${p.price}`;
             document.getElementById('modal-desc').innerText = p.desc;
-            document.getElementById('modal-img-container').innerHTML = `<img src="${p.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x500?text=Infin8+Grip'">`;
+            document.getElementById('modal-img-container').innerHTML = `<img src="${p.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x500?text=Grip+Image'">`;
             document.getElementById('add-to-cart-btn').onclick = () => addToCart(p.id);
-            document.getElementById('product-modal').classList.replace('hidden', 'flex');
+            document.getElementById('product-modal').classList.remove('hidden');
+            document.getElementById('product-modal').classList.add('flex');
         }
 
         function closeModal() {
-            document.getElementById('product-modal').classList.replace('flex', 'hidden');
+            document.getElementById('product-modal').classList.add('hidden');
+            document.getElementById('product-modal').classList.remove('flex');
         }
 
         function toggleCart(show) {
@@ -116,16 +118,16 @@
             const container = document.getElementById('cart-items');
             
             if (cart.length === 0) {
-                container.innerHTML = `<p class="text-stone-400 text-center mt-10 uppercase text-xs tracking-widest">Bag is empty</p>`;
+                container.innerHTML = `<p class="text-gray-400 text-center mt-10">Your bag is empty.</p>`;
             } else {
                 container.innerHTML = cart.map(item => `
-                    <div class="flex gap-4 items-center">
-                        <img src="${item.img}" class="w-16 h-16 object-cover border border-stone-200 shadow-sm">
+                    <div class="flex gap-4 items-center animate-in fade-in slide-in-from-right-4 duration-300">
+                        <img src="${item.img}" class="w-16 h-16 object-cover rounded shadow-sm">
                         <div class="flex-1">
-                            <h4 class="font-bold text-xs uppercase tracking-tighter">${item.name}</h4>
-                            <p class="text-xs text-stone-500 font-mono">$${item.price}</p>
+                            <h4 class="font-bold text-sm leading-tight">${item.name}</h4>
+                            <p class="text-xs text-gray-500">$${item.price}</p>
                         </div>
-                        <button onclick="removeFromCart(${item.cartId})" class="text-stone-300 hover:text-black transition-colors text-2xl">&times;</button>
+                        <button onclick="removeFromCart(${item.cartId})" class="text-gray-300 hover:text-red-500 transition-colors text-2xl">&times;</button>
                     </div>
                 `).join('');
             }
@@ -135,32 +137,33 @@
         }
 
         async function checkout() {
-            if (cart.length === 0) return alert("Your bag is empty!");
+            if (cart.length === 0) return alert("Add items first!");
             
             const btn = document.getElementById('checkout-btn');
             const originalText = btn.innerText;
-            btn.innerText = "AUTHENTICATING...";
+            btn.innerText = "Connecting to Square...";
             btn.disabled = true;
 
             try {
-                // Pointing to the relative /api/checkout on the same domain
+                // This calls your Vercel serverless function
                 const response = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ items: cart })
                 });
 
-                if (!response.ok) throw new Error('Checkout API unresponsive');
+                if (!response.ok) throw new Error('API Error');
 
                 const data = await response.json();
+                
                 if (data.url) {
                     window.location.href = data.url;
                 } else {
-                    throw new Error("Invalid response from server");
+                    throw new Error("Missing URL");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Checkout Error: Check Vercel logs and Square Keys.");
+                alert("Checkout Error: Ensure your Square Keys are set in Vercel.");
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
