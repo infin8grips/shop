@@ -2,7 +2,7 @@ const { Client, Environment } = require('square');
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Sandbox, // Change to Environment.Production when going live
+  environment: Environment.Production, // Change to Environment.Production when going live
 });
 
 module.exports = async (req, res) => {
