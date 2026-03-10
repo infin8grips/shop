@@ -3,7 +3,7 @@ const { Client, Environment } = require('square');
 // Initialize the Square Client
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Sandbox, // Change to Environment.Production when you are ready for real money
+  environment: Environment.Production, // Change to Environment.Production when you are ready for real money
 });
 
 export default async function handler(req, res) {
