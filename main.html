@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infin8Grips | Custom Shop</title>
+    <title>Infin8Grips | Custom 1911 Grips & Hardware</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/luminous-lightbox/2.3.2/luminous-basic.min.css">
@@ -11,6 +11,8 @@
     <style>
         .product-item img { transition: transform 0.3s ease; }
         .product-item:hover img { transform: scale(1.02); }
+        /* Lightbox depth fix for sticky headers */
+        .lum-lightbox { z-index: 1000; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans leading-normal tracking-normal">
@@ -20,11 +22,8 @@
             <h1 class="text-2xl font-black tracking-tighter uppercase text-black">Infin8Grips</h1>
             
             <div class="relative w-full md:w-64">
-                <input type="text" id="shop-search" placeholder="Search models (e.g. 1911)..." 
+                <input type="text" id="shop-search" placeholder="Search (1911, snake, steel)..." 
                        class="w-full bg-gray-100 border-none rounded-full py-2 px-5 text-sm focus:ring-2 focus:ring-black transition-all">
-                <svg class="absolute right-4 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
             </div>
         </div>
     </header>
@@ -34,7 +33,7 @@
 
     <footer class="bg-white border-t mt-20">
         <div class="max-w-6xl mx-auto px-6 py-10 text-center text-gray-400 text-xs">
-            <p>&copy; 2026 Infin8Grips. All payments processed securely via Square.</p>
+            <p>&copy; 2026 Infin8Grips | Los Fresnos, TX. Secure via Square.</p>
         </div>
     </footer>
 
@@ -55,73 +54,66 @@
                 description: "Heavy-duty custom fabricated hardware. Clean finish and built to last.",
                 images: ["images/item2-1.jpg", "images/item2-2.jpg"],
                 squareLink: "https://square.link/u/9tMdnUti"
-            },
-            {
-                name: "Specialized Accessory",
-                price: "$25.00",
-                description: "Hand-finished with a minimalist design. Perfect for everyday professional use.",
-                images: ["images/item3-1.jpg"],
-                squareLink: "https://square.link/u/9tMdnUti"
             }
         ];
 
-        const grid = document.getElementById('product-grid');
+        function initShop() {
+            const grid = document.getElementById('product-grid');
+            if (!grid) return;
 
-        // Render each item
-        products.forEach((item, index) => {
-            const hiddenImages = item.images.slice(1).map(img => `
-                <a href="${img}" class="luminous-gallery hidden" data-gallery-id="gal-${index}"></a>
-            `).join('');
+            products.forEach((item, index) => {
+                const hiddenImages = item.images.slice(1).map(img => `
+                    <a href="${img}" class="luminous-gallery hidden" data-gallery-id="gal-${index}"></a>
+                `).join('');
 
-            const dots = item.images.length > 1 ? `
-                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 px-3 py-1.5 bg-black/20 backdrop-blur-md rounded-full pointer-events-none">
-                    ${item.images.map((_, i) => `
-                        <div class="w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/40'}"></div>
-                    `).join('')}
-                </div>
-            ` : '';
-
-            const card = `
-                <div class="product-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col" 
-                     data-search="${item.name.toLowerCase()} ${item.description.toLowerCase()}">
-                    <div class="relative group">
-                        <a href="${item.images[0]}" class="luminous-gallery" data-gallery-id="gal-${index}">
-                            <img src="${item.images[0]}" alt="${item.name}" class="w-full h-80 object-cover cursor-zoom-in">
-                        </a>
-                        ${dots}
-                        ${hiddenImages}
-                        ${item.images.length > 1 ? `<div class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-md pointer-events-none">${item.images.length} PHOTOS</div>` : ''}
+                const dots = item.images.length > 1 ? `
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 px-3 py-1.5 bg-black/20 backdrop-blur-md rounded-full pointer-events-none">
+                        ${item.images.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/40'}"></div>`).join('')}
                     </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h2 class="text-xl font-bold text-gray-900">${item.name}</h2>
-                        <p class="text-gray-500 text-sm mt-2 flex-grow">${item.description}</p>
-                        <div class="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                            <span class="text-xl font-black text-gray-900">${item.price}</span>
-                            <a href="${item.squareLink}" class="bg-black text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition">Buy Now</a>
+                ` : '';
+
+                grid.innerHTML += `
+                    <div class="product-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col" 
+                         data-search-text="${item.name.toLowerCase()} ${item.description.toLowerCase()}">
+                        <div class="relative group">
+                            <a href="${item.images[0]}" class="luminous-gallery" data-gallery-id="gal-${index}">
+                                <img src="${item.images[0]}" alt="${item.name}" class="w-full h-80 object-cover cursor-zoom-in">
+                            </a>
+                            ${dots}
+                            ${hiddenImages}
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h2 class="text-xl font-bold text-gray-900">${item.name}</h2>
+                            <p class="text-gray-500 text-sm mt-2 flex-grow">${item.description}</p>
+                            <div class="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
+                                <span class="text-xl font-black text-gray-900">${item.price}</span>
+                                <a href="${item.squareLink}" class="bg-black text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition">Buy Now</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-            grid.innerHTML += card;
-        });
-
-        // FIXED: Gallery initialization with looping arrows enabled
-        new LuminousGallery(document.querySelectorAll(".luminous-gallery"), {
-            arrowNavigation: true
-        });
-
-        // FIXED: Search Filter Logic
-        const searchInput = document.getElementById('shop-search');
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase().trim();
-            const productItems = document.querySelectorAll('.product-item');
-
-            productItems.forEach(item => {
-                const searchText = item.getAttribute('data-search');
-                // Shows item if search matches, otherwise hides it
-                item.style.display = searchText.includes(term) ? 'flex' : 'none';
+                `;
             });
-        });
+
+            // Initialize Lightbox with Loop Navigation
+            new LuminousGallery(document.querySelectorAll(".luminous-gallery"), {
+                arrowNavigation: true
+            });
+
+            // Initialize Live Search Filter
+            const searchInput = document.getElementById('shop-search');
+            searchInput.addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase().trim();
+                const items = document.querySelectorAll('.product-item');
+                
+                items.forEach(card => {
+                    const content = card.getAttribute('data-search-text');
+                    card.style.display = content.includes(term) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        // Wait for images and assets to load to avoid script errors
+        window.addEventListener('load', initShop);
     </script>
 </body>
 </html>
