@@ -143,14 +143,14 @@
             const originalText = btn.innerText;
             btn.innerText = "Connecting to Square...";
             btn.disabled = true;
-
+               
             try {
-                // Change this back to the relative path:
-const response = await fetch('/api/checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items: cart })
-});
+                // This calls your Vercel serverless function
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: cart })
+                });
 
                 if (!response.ok) throw new Error('API Error');
 
