@@ -11,21 +11,30 @@
     <style>
         .product-item img { transition: transform 0.3s ease; }
         .product-item:hover img { transform: scale(1.02); }
+        /* This ensures the pop-out box is centered and on top */
         .lum-lightbox { z-index: 1000; }
+        .lum-lightbox-inner img { max-width: 90vw; max-height: 80vh; border-radius: 8px; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-gray-50 text-gray-900 font-sans leading-normal">
 
     <header class="bg-white border-b sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 class="text-2xl font-black tracking-tighter uppercase">Infin8Grips</h1>
-            <input type="text" id="shop-search" placeholder="Search (1911, snake, etc)..." 
-                   class="w-full md:w-64 bg-gray-100 border-none rounded-full py-2 px-5 text-sm focus:ring-2 focus:ring-black outline-none">
+        <div class="max-w-6xl mx-auto px-6 py-6 md:py-8 flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-tighter uppercase text-black">Infin8Grips</h1>
+            <nav class="hidden md:block text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+                Handcrafted in Texas
+            </nav>
         </div>
     </header>
 
     <main id="product-grid" class="max-w-6xl mx-auto p-6 md:p-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         </main>
+
+    <footer class="bg-white border-t mt-20">
+        <div class="max-w-6xl mx-auto px-6 py-10 text-center text-gray-400 text-xs">
+            <p>&copy; 2026 Infin8Grips. All payments processed securely via Square.</p>
+        </div>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/luminous-lightbox/2.3.2/Luminous.min.js"></script>
     
@@ -47,40 +56,36 @@
             }
         ];
 
-        let galleryInstance = null;
-
-        function renderShop(filter = "") {
+        function initShop() {
             const grid = document.getElementById('product-grid');
-            grid.innerHTML = ""; // Clear grid
+            if (!grid) return;
 
             products.forEach((item, index) => {
-                const searchStr = `${item.name} ${item.description}`.toLowerCase();
-                if (filter && !searchStr.includes(filter.toLowerCase())) return;
-
+                // Hidden links create the "scrollable" gallery set
                 const hiddenImages = item.images.slice(1).map(img => `
-                    <a href="${img}" class="luminous-gallery hidden" data-gallery="g-${index}"></a>
+                    <a href="${img}" class="luminous-link hidden" data-gallery="item-${index}"></a>
                 `).join('');
 
                 const dots = item.images.length > 1 ? `
-                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 px-3 py-1.5 bg-black/20 backdrop-blur-md rounded-full">
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 px-3 py-1.5 bg-black/20 backdrop-blur-md rounded-full pointer-events-none">
                         ${item.images.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/40'}"></div>`).join('')}
                     </div>
                 ` : '';
 
                 grid.innerHTML += `
                     <div class="product-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
-                        <div class="relative">
-                            <a href="${item.images[0]}" class="luminous-gallery" data-gallery="g-${index}">
-                                <img src="${item.images[0]}" class="w-full h-80 object-cover cursor-zoom-in">
+                        <div class="relative group">
+                            <a href="${item.images[0]}" class="luminous-link" data-gallery="item-${index}">
+                                <img src="${item.images[0]}" alt="${item.name}" class="w-full h-80 object-cover cursor-zoom-in">
                             </a>
                             ${dots}
                             ${hiddenImages}
                         </div>
                         <div class="p-6 flex-grow flex flex-col">
-                            <h2 class="text-xl font-bold">${item.name}</h2>
+                            <h2 class="text-xl font-bold text-gray-900">${item.name}</h2>
                             <p class="text-gray-500 text-sm mt-2 flex-grow">${item.description}</p>
                             <div class="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                                <span class="text-xl font-black">${item.price}</span>
+                                <span class="text-xl font-black text-gray-900">${item.price}</span>
                                 <a href="${item.squareLink}" class="bg-black text-white px-6 py-2.5 rounded-full text-sm font-bold">Buy Now</a>
                             </div>
                         </div>
@@ -88,24 +93,15 @@
                 `;
             });
 
-            // Re-initialize Lightbox every time we render
-            if (galleryInstance) {
-                // We don't destroy, just re-bind to new elements
-            }
-            new LuminousGallery(document.querySelectorAll(".luminous-gallery"), {
+            // Initialize the Lightbox as a Gallery
+            // arrowNavigation: true allows scrolling through the images
+            new LuminousGallery(document.querySelectorAll(".luminous-link"), {
                 arrowNavigation: true
             });
         }
 
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderShop();
-
-            // Search Listener
-            document.getElementById('shop-search').addEventListener('input', (e) => {
-                renderShop(e.target.value);
-            });
-        });
+        // Run setup once the page is fully loaded
+        window.addEventListener('load', initShop);
     </script>
 </body>
 </html>
