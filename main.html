@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infin8Grips</title>
+    <title>Infin8Grips | Custom Shop</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/luminous-lightbox/2.3.2/luminous-basic.min.css">
@@ -20,7 +20,7 @@
             <h1 class="text-2xl font-black tracking-tighter uppercase text-black">Infin8Grips</h1>
             
             <div class="relative w-full md:w-64">
-                <input type="text" id="shop-search" placeholder="Search models (e.g. 1911, CZ)..." 
+                <input type="text" id="shop-search" placeholder="Search models (e.g. 1911)..." 
                        class="w-full bg-gray-100 border-none rounded-full py-2 px-5 text-sm focus:ring-2 focus:ring-black transition-all">
                 <svg class="absolute right-4 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -67,10 +67,10 @@
 
         const grid = document.getElementById('product-grid');
 
-        // Render products
+        // Render each item
         products.forEach((item, index) => {
             const hiddenImages = item.images.slice(1).map(img => `
-                <a href="${img}" class="luminous-gallery hidden" data-gallery-id="gallery-${index}"></a>
+                <a href="${img}" class="luminous-gallery hidden" data-gallery-id="gal-${index}"></a>
             `).join('');
 
             const dots = item.images.length > 1 ? `
@@ -85,7 +85,7 @@
                 <div class="product-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col" 
                      data-search="${item.name.toLowerCase()} ${item.description.toLowerCase()}">
                     <div class="relative group">
-                        <a href="${item.images[0]}" class="luminous-gallery" data-gallery-id="gallery-${index}">
+                        <a href="${item.images[0]}" class="luminous-gallery" data-gallery-id="gal-${index}">
                             <img src="${item.images[0]}" alt="${item.name}" class="w-full h-80 object-cover cursor-zoom-in">
                         </a>
                         ${dots}
@@ -105,17 +105,20 @@
             grid.innerHTML += card;
         });
 
-        // Initialize Lightbox
-        new LuminousGallery(document.querySelectorAll(".luminous-gallery"));
+        // FIXED: Gallery initialization with looping arrows enabled
+        new LuminousGallery(document.querySelectorAll(".luminous-gallery"), {
+            arrowNavigation: true
+        });
 
-        // SEARCH FILTER LOGIC
+        // FIXED: Search Filter Logic
         const searchInput = document.getElementById('shop-search');
         searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
+            const term = e.target.value.toLowerCase().trim();
             const productItems = document.querySelectorAll('.product-item');
 
             productItems.forEach(item => {
                 const searchText = item.getAttribute('data-search');
+                // Shows item if search matches, otherwise hides it
                 item.style.display = searchText.includes(term) ? 'flex' : 'none';
             });
         });
