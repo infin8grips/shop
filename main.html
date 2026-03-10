@@ -77,21 +77,36 @@
         const grid = document.getElementById('product-grid');
 
         products.forEach((item, index) => {
-            // Create the card
+            // 1. Create hidden links for the lightbox gallery
+            const hiddenImages = item.images.slice(1).map(img => `
+                <a href="${img}" class="luminous-gallery hidden" data-gallery-id="gallery-${index}"></a>
+            `).join('');
+
+            // 2. Create the dots for the bottom of the image
+            const dots = item.images.length > 1 ? `
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1.5 px-3 py-1.5 bg-black/20 backdrop-blur-md rounded-full pointer-events-none">
+                    ${item.images.map((_, i) => `
+                        <div class="w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/40'}"></div>
+                    `).join('')}
+                </div>
+            ` : '';
+
             const card = `
                 <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
                     <div class="relative group">
-                        <a href="${item.images[0]}" class="luminous-gallery" data-gallery-id="gal-${index}">
+                        <a href="${item.images[0]}" class="luminous-gallery" data-gallery-id="gallery-${index}">
                             <img src="${item.images[0]}" alt="${item.name}" class="w-full h-80 object-cover cursor-zoom-in">
                         </a>
                         
-                        ${item.images.slice(1).map(img => `
-                            <a href="${img}" class="luminous-gallery hidden" data-gallery-id="gal-${index}"></a>
-                        `).join('')}
+                        ${dots}
 
-                        <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-gray-600">
-                            Click to View Gallery
-                        </div>
+                        ${hiddenImages}
+
+                        ${item.images.length > 1 ? `
+                            <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-md pointer-events-none">
+                                ${item.images.length} PHOTOS
+                            </div>
+                        ` : ''}
                     </div>
 
                     <div class="p-6 flex-grow flex flex-col">
