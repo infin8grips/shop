@@ -1,0 +1,8 @@
+{
+  "name": "infin8grips-shop",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "dependencies": {
+    "square": "^31.0.0"
+  }
+}
