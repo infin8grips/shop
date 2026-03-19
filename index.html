@@ -100,6 +100,26 @@
       border-color: #d0d0d0;
     }
 
+    /* Thumbnail area */
+    .item-thumb-wrapper {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #e9e9ee;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     .item-name {
       font-size: 14px;
       font-weight: 500;
@@ -371,7 +391,8 @@
       id: "item-" + (i + 1),
       name: "Product " + (i + 1),
       description: "A short description of product " + (i + 1) + ".",
-      priceCents: 1999 + i * 100 // example pricing
+      priceCents: 1999 + i * 100, // example pricing
+      thumbnailUrl: "https://via.placeholder.com/320x200?text=Item+" + (i + 1)
     }));
 
     const state = {
@@ -379,11 +400,11 @@
       cart: {} // { itemId: { ...item, qty } }
     };
 
-    // --- RENDER ITEMS ---
-
     function formatMoney(cents) {
       return "$" + (cents / 100).toFixed(2);
     }
+
+    // --- RENDER ITEMS ---
 
     function renderItems() {
       const grid = document.getElementById("items-grid");
@@ -395,6 +416,17 @@
       pageItems.forEach(item => {
         const card = document.createElement("div");
         card.className = "item-card";
+
+        const thumbWrapper = document.createElement("div");
+        thumbWrapper.className = "item-thumb-wrapper";
+
+        const img = document.createElement("img");
+        img.className = "item-thumb";
+        img.src = item.thumbnailUrl;
+        img.alt = item.name;
+
+        thumbWrapper.appendChild(img);
+        card.appendChild(thumbWrapper);
 
         const name = document.createElement("div");
         name.className = "item-name";
@@ -424,230 +456,4 @@
         addBtn.className = "btn-primary";
         addBtn.textContent = "Add";
 
-        addBtn.addEventListener("click", () => {
-          const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
-          addToCart(item, qty);
-        });
-
-        actions.appendChild(qtyInput);
-        actions.appendChild(addBtn);
-
-        footer.appendChild(price);
-        footer.appendChild(actions);
-
-        card.appendChild(name);
-        card.appendChild(desc);
-        card.appendChild(footer);
-
-        grid.appendChild(card);
-      });
-
-      const pageInfo = document.getElementById("page-info");
-      const totalPages = Math.max(1, Math.ceil(allItems.length / ITEMS_PER_PAGE));
-      pageInfo.textContent = "Page " + state.page + " of " + totalPages;
-
-      document.getElementById("prev-page").disabled = state.page <= 1;
-      document.getElementById("next-page").disabled = state.page >= totalPages;
-    }
-
-    // --- CART LOGIC ---
-
-    function addToCart(item, qty) {
-      const existing = state.cart[item.id];
-      const newQty = (existing?.qty || 0) + qty;
-      state.cart[item.id] = { ...item, qty: newQty };
-      renderCart();
-    }
-
-    function removeFromCart(itemId) {
-      delete state.cart[itemId];
-      renderCart();
-    }
-
-    function updateCartQty(itemId, qty) {
-      if (qty <= 0) {
-        removeFromCart(itemId);
-      } else {
-        if (state.cart[itemId]) {
-          state.cart[itemId].qty = qty;
-        }
-        renderCart();
-      }
-    }
-
-    function clearCart() {
-      state.cart = {};
-      renderCart();
-    }
-
-    function getCartSummary() {
-      const items = Object.values(state.cart);
-      let totalCents = 0;
-      let count = 0;
-      items.forEach(ci => {
-        totalCents += ci.priceCents * ci.qty;
-        count += ci.qty;
-      });
-      return { items, totalCents, count };
-    }
-
-    function renderCart() {
-      const container = document.getElementById("cart-items");
-      container.innerHTML = "";
-      const { items, totalCents, count } = getCartSummary();
-
-      const badge = document.getElementById("cart-count-badge");
-      badge.textContent = count + (count === 1 ? " item" : " items");
-
-      if (!items.length) {
-        const empty = document.createElement("p");
-        empty.className = "cart-empty";
-        empty.textContent = "Your cart is empty.";
-        container.appendChild(empty);
-      } else {
-        items.forEach(ci => {
-          const row = document.createElement("div");
-          row.className = "cart-item";
-
-          const main = document.createElement("div");
-          main.className = "cart-item-main";
-
-          const name = document.createElement("div");
-          name.className = "cart-item-name";
-          name.textContent = ci.name;
-
-          const meta = document.createElement("div");
-          meta.className = "cart-item-meta";
-          meta.textContent = ci.qty + " × " + formatMoney(ci.priceCents);
-
-          main.appendChild(name);
-          main.appendChild(meta);
-
-          const actions = document.createElement("div");
-          actions.className = "cart-item-actions";
-
-          const subTotal = document.createElement("div");
-          subTotal.textContent = formatMoney(ci.priceCents * ci.qty);
-
-          const controlRow = document.createElement("div");
-          controlRow.style.display = "flex";
-          controlRow.style.gap = "4px";
-          controlRow.style.alignItems = "center";
-
-          const qtyInput = document.createElement("input");
-          qtyInput.type = "number";
-          qtyInput.min = "1";
-          qtyInput.value = ci.qty;
-          qtyInput.className = "qty-input";
-          qtyInput.style.width = "42px";
-
-          qtyInput.addEventListener("change", () => {
-            const newQty = Math.max(0, parseInt(qtyInput.value, 10) || 0);
-            updateCartQty(ci.id, newQty);
-          });
-
-          const removeBtn = document.createElement("button");
-          removeBtn.className = "btn-outline";
-          removeBtn.textContent = "Remove";
-          removeBtn.style.fontSize = "11px";
-          removeBtn.addEventListener("click", () => removeFromCart(ci.id));
-
-          controlRow.appendChild(qtyInput);
-          controlRow.appendChild(removeBtn);
-
-          actions.appendChild(subTotal);
-          actions.appendChild(controlRow);
-
-          row.appendChild(main);
-          row.appendChild(actions);
-
-          container.appendChild(row);
-        });
-      }
-
-      document.getElementById("cart-total").textContent = formatMoney(totalCents);
-      document.getElementById("checkout-btn").disabled = !items.length;
-      document.getElementById("clear-cart").disabled = !items.length;
-    }
-
-    // --- CHECKOUT INTEGRATION ---
-    // This function posts cart details to your backend.
-    // Your backend should:
-    //   - Use Square APIs with your secret credentials
-    //   - Create an Order + Checkout or Web Payments charge for `totalCents`
-    //   - Respond with { checkoutUrl } or redirect directly
-
-    async function handleCheckout() {
-      const summary = getCartSummary();
-      if (!summary.items.length) return;
-
-      const checkoutBtn = document.getElementById("checkout-btn");
-      checkoutBtn.disabled = true;
-      checkoutBtn.textContent = "Redirecting…";
-
-      try {
-        const response = await fetch("/create-checkout", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            totalCents: summary.totalCents,
-            currency: "USD",
-            items: summary.items.map(ci => ({
-              id: ci.id,
-              name: ci.name,
-              quantity: ci.qty,
-              priceCents: ci.priceCents
-            }))
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error("Checkout failed");
-        }
-
-        const data = await response.json();
-
-        // Option A: backend returns a Square-hosted checkout URL
-        if (data.checkoutUrl) {
-          window.location.href = data.checkoutUrl;
-        } else if (data.redirectUrl) {
-          // generic fallback
-          window.location.href = data.redirectUrl;
-        } else {
-          alert("Checkout created, but no redirect URL was returned.");
-          checkoutBtn.disabled = false;
-          checkoutBtn.textContent = "Checkout with Square";
-        }
-      } catch (err) {
-        console.error(err);
-        alert("There was an error starting checkout. Please try again.");
-        checkoutBtn.disabled = false;
-        checkoutBtn.textContent = "Checkout with Square";
-      }
-    }
-
-    // --- INIT ---
-
-    document.getElementById("prev-page").addEventListener("click", () => {
-      if (state.page > 1) {
-        state.page--;
-        renderItems();
-      }
-    });
-
-    document.getElementById("next-page").addEventListener("click", () => {
-      const totalPages = Math.ceil(allItems.length / ITEMS_PER_PAGE);
-      if (state.page < totalPages) {
-        state.page++;
-        renderItems();
-      }
-    });
-
-    document.getElementById("checkout-btn").addEventListener("click", handleCheckout);
-    document.getElementById("clear-cart").addEventListener("click", clearCart);
-
-    renderItems();
-    renderCart();
-  </script>
-</body>
-</html>
+        addBtn.addE
